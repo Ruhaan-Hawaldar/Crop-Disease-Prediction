@@ -4,6 +4,7 @@ from ultralytics import YOLO
 import cv2
 import os
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 
 # Step 1: Define Disease-Cure Mappings
@@ -11,11 +12,10 @@ DISEASE_CURE = {
     "brownspot": "Apply fungicides like Mancozeb, Copper oxychloride, or Propiconazole.",
     "Bacterial_Blight": "Use copper-based bactericides like Copper hydroxide or Streptomycin sulfate.",
     "riceblast": "Apply fungicides such as Tricyclazole, Isoprothiolane, or Azoxystrobin.",
-    "Healthy-Plant": "Maintain good soil health with organic matter.",
-    "unknown": "No cure available for this disease. Consult an expert.",
+    "unknown": "Maintain good soil health with organic matter.",
 }
 
-
+@login_required(login_url='/yoloapp/login/')  # Redirects to login page if not logged in
 def upload_and_predict(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
@@ -62,3 +62,57 @@ def upload_and_predict(request):
         form = ImageUploadForm()
 
     return render(request, 'yoloapp/upload.html', {'form': form})
+
+
+# login view 
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('upload_and_predict')  # Redirect to the main page after login
+        else:
+            return render(request, 'yoloapp/login.html', {'error': "Invalid username or password"})
+
+    return render(request, 'yoloapp/login.html')
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('login')  # Redirect to login page after logout
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            messages.error(request, "Passwords do not match!")
+        elif User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken!")
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered!")
+        else:
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            user.save()
+            login(request, user)  # Automatically log in the user after registration
+            return redirect('upload_and_predict')  # Redirect to the main page
+
+    return render(request, 'yoloapp/register.html')
