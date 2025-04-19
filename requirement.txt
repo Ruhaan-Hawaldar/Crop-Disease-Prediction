@@ -1,0 +1,4 @@
+django
+gunicorn
+ultralytics
+opencv-python
