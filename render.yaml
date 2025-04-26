@@ -11,3 +11,31 @@ services:
         generateValue: true
       - key: ALLOWED_HOSTS
         value: "*"
+services:
+  - type: web
+    name: crop-disease-prediction
+    env: python
+    plan: free  # or "starter", "pro", etc.
+    region: singapore  # or choose your region
+
+    buildCommand: |
+      pip install poetry
+      poetry install
+
+    startCommand: poetry run python manage.py runserver 0.0.0.0:8000
+
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: CropDiseasePrediction.settings
+
+      - key: PYTHON_VERSION
+        value: 3.11.11
+
+      # Add more environment variables here (like SECRET_KEY, DEBUG, etc.)
+      - key: SECRET_KEY
+        value: your-secret-key-here
+
+      - key: DEBUG
+        value: "False"
+
+    autoDeploy: true

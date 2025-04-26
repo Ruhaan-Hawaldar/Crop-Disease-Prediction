@@ -2,3 +2,4 @@ django
 gunicorn
 ultralytics
 opencv-python
+whitenoise==6.6.0

@@ -28,7 +28,9 @@ def upload_and_predict(request):
                     destination.write(chunk)
 
             # Step 2: Load YOLO model
-            model = YOLO(os.path.join('yoloapp', 'best.pt'))
+            # model = YOLO(os.path.join('yoloapp', 'best.pt'))
+            model_path = os.path.join(settings.BASE_DIR, 'yoloapp', 'static', 'model', 'best.pt')
+            model = YOLO(model_path)
 
             # Step 3: Perform inference
             results = model.predict(source=image_path, conf=0.2)
