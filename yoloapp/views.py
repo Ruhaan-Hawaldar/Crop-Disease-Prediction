@@ -116,5 +116,8 @@ def register(request):
             user.save()
             login(request, user)  # Automatically log in the user after registration
             return redirect('upload_and_predict')  # Redirect to the main page
+        
+        messages.success(request, "Account created successfully! You are now logged in.")
+
 
     return render(request, 'yoloapp/register.html')
