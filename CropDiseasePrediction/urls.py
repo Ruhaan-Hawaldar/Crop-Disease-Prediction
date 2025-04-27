@@ -26,7 +26,7 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('yoloapp/', include('yoloapp.urls')),
-    path('', lambda request: redirect('upload_and_predict')),  # 👈 Add this
+    path('', lambda request: redirect('login')),  # 👈 Add this
     # path('', include('crop_api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
