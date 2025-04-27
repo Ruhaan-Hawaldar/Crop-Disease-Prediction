@@ -143,6 +143,12 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# LOGIN_URL = '/yoloapp/login/'
+LOGIN_URL = '/yoloapp/login/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://crop-disease-prediction-mnjy.onrender.com',
+    'http://crop-disease-prediction-mnjy.onrender.com',
+]

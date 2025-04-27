@@ -71,7 +71,9 @@ def upload_and_predict(request):
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def user_login(request):
     if request.method == "POST":
         username = request.POST['username']
