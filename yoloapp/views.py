@@ -33,7 +33,11 @@ def upload_and_predict(request):
             model = YOLO(model_path)
 
             # Step 3: Perform inference
+            # results = model.predict(source=image_path, conf=0.2)
+            print("Starting YOLO prediction...")
             results = model.predict(source=image_path, conf=0.2)
+            print("YOLO prediction completed.")
+
 
             # Get the predicted class (disease) names
             predicted_classes = results[0].boxes.cls  # Array of predicted class IDs
